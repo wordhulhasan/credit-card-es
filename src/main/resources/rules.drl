@@ -1,0 +1,347 @@
+import com.example.creditcardes.models.Profile
+
+rule "1. first card"
+salience 1
+    when
+        recommendation : Profile(creditAge == 0 && numberOfCardsOpen == 0)
+    then
+        recommendation.setOfferedCard("Deserve Edu");
+        System.out.println("Rule 1");
+    end;
+
+rule "2. second card"
+salience 2
+    when
+        recommendation : Profile(creditAge < 6 && numberOfCardsOpen == 0 )
+    then
+        recommendation.setOfferedCard("Discover It");
+        System.out.println("Rule 2");
+     end;
+
+rule "3. no credit history and two cards"
+salience 1
+    when
+        recommendation : Profile(creditAge < 6 && numberOfCardsOpen == 2 )
+    then
+        recommendation.setOfferedCard("Wait for credit history to build");
+        System.out.println("Rule 3");
+     end;
+
+rule "4. apple card"
+salience 1
+    when
+        recommendation : Profile(creditAge>=6 && creditScore >=650 && reason == "apple devices")
+    then
+        recommendation.setOfferedCard("Apple Card");
+        System.out.println("Rule 4");
+     end;
+
+rule "5. apple products"
+salience 1
+    when
+        recommendation : Profile(creditAge<6 && creditScore >=650 && reason == "apple devices")
+    then
+        recommendation.setOfferedCard("Discover IT with 15 Months of APR");
+        System.out.println("Rule 5");
+     end;
+
+rule "6. apple products with low score"
+salience 3
+    when
+        recommendation : Profile(creditAge<6 && creditScore < 650 && reason == "apple devices" )
+    then
+        recommendation.setOfferedCard("Improve Credit Score First");
+        System.out.println("Rule 6");
+     end
+
+rule "7. best buy products"
+salience 1
+    when
+        recommendation : Profile(creditAge<6 && creditScore < 700 && reason == "electronics" && derogatoryMarks == 0 && paymentHistory == 100 && usagePercentage <30)
+    then
+        recommendation.setOfferedCard("Best Buy Credit Card");
+        System.out.println("Rule 7");
+     end;
+
+rule "8. chase 24-5 rule"
+salience 1
+    when
+        recommendation : Profile(creditAge>6 && oldestCardAge >10 && creditScore < 650 && openedAccountLastTwoYears <5)
+    then
+        recommendation.setOfferedCard("Chase Freedom Flex");
+        System.out.println("Rule 8");
+     end;
+
+
+rule "9. chase 24-5 rule violation"
+salience 1
+    when
+        recommendation : Profile((creditAge>6 && creditScore < 650 && openedAccountLastTwoYears >=5) || (oldestCardAge >10 && creditScore < 650 && openedAccountLastTwoYears >=5))
+    then
+        recommendation.setOfferedCard("Amex Everyday Cash");
+        System.out.println("Rule 9");
+     end;
+
+rule "10. no Cards"
+salience 5
+    when
+        recommendation : Profile( creditAge>1 && (derogatoryMarks > 3 || paymentHistory < 80 || usagePercentage > 60 ))
+    then
+        recommendation.setOfferedCard("Improve Credit History");
+        System.out.println("Rule 10");
+     end;
+
+rule "11. too many cards in short amount of time"
+salience 1
+    when
+        recommendation : Profile( numberOfHardInquiries >10 )
+    then
+        recommendation.setOfferedCard("You have too many hard inquiries");
+        System.out.println("Rule 11");
+     end;
+
+rule "12. Medical cards"
+salience 1
+    when
+        recommendation : Profile(creditScore > 650 && creditAge > 6 && reason == "Medical Bills")
+    then
+        recommendation.setOfferedCard("Care Credit");
+        System.out.println(" Rule 12");
+     end;
+
+rule "13. Medical cards with bad profile"
+salience 1
+    when
+        recommendation : Profile((creditScore < 650 || creditAge < 6) && reason == "Medical Bills" &&  !(derogatoryMarks > 3 || paymentHistory < 80 || usagePercentage > 60 ))
+    then
+        recommendation.setOfferedCard("Discover IT with 15 Months of APR");
+        System.out.println(" Rule 13");
+     end;
+
+rule "14. Medical cards with bad profile 2"
+salience 1
+    when
+        recommendation : Profile((creditScore < 650 && creditAge > 6) && reason == "Medical Bills")
+    then
+        recommendation.setOfferedCard("Amex Everyday Cash or Chase with 15 months APR");
+        System.out.println(" Rule 14");
+     end;
+
+rule "15"
+salience 1
+    when
+        recommendation : Profile(creditScore>700 && creditAge > 12 && reason == "Travel")
+    then
+        recommendation.setOfferedCard("Amex Delta");
+        System.out.println("Rule 15");
+     end;
+
+rule "16"
+salience 1
+    when
+        recommendation : Profile(creditScore>700 && creditAge > 12 && reason == "Travel" && openedAccountLastTwoYears <5)
+    then
+        recommendation.setOfferedCard("Chase Sapphire Preferred");
+        System.out.println("Rule 16");
+     end;
+
+rule "17"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 12 && reason == "Travel" && openedAccountLastTwoYears >5)
+    then
+        recommendation.setOfferedCard("Capital One American Airlines Miles Card");
+        System.out.println("Rule 17");
+     end;
+
+rule "18"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 12 && reason == "Groceries")
+    then
+        recommendation.setOfferedCard("Capital One Walmart Credit Card");
+        System.out.println("Rule 18");
+     end;
+
+rule "19"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 12 && reason == "Online Shopping")
+    then
+        recommendation.setOfferedCard("Amazon Credit Card");
+        System.out.println("Rule 19");
+     end;
+
+rule "20"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 12 && reason == "Hotel Stay" && openedAccountLastTwoYears <5)
+    then
+        recommendation.setOfferedCard("Marriott Bonvoy Credit Card");
+        System.out.println("Rule 20");
+     end;
+
+rule "21"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 12 && reason == "Hotel Stay" && openedAccountLastTwoYears >5)
+    then
+        recommendation.setOfferedCard("Hilton Honors American Express Surpass® Card");
+        System.out.println("Rule 21");
+     end;
+
+rule "22"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 6 && reason == "Cash back" && openedAccountLastTwoYears >5)
+    then
+        recommendation.setOfferedCard("Blue Cash everyday");
+        System.out.println("Rule 22");
+     end;
+
+
+rule "23"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 6 && reason == "Cash back" && openedAccountLastTwoYears <5)
+    then
+        recommendation.setOfferedCard("Chase Freedom Flex");
+        System.out.println("Rule 23");
+     end;
+
+rule "24"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 6 && reason == "Welcome Offer" && openedAccountLastTwoYears <5)
+    then
+        recommendation.setOfferedCard("Chase Freedom Flex");
+        System.out.println("Rule 24");
+     end;
+
+rule "25"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 6 && reason == "Welcome Offer" && openedAccountLastTwoYears >5)
+    then
+        recommendation.setOfferedCard("Blue Cash Everyday for Cashback or Amex Delta for Flying Miles");
+        System.out.println("Rule 25");
+     end;
+
+rule "26"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge > 10 && reason == "Welcome Offer" && openedAccountLastTwoYears >5)
+    then
+        recommendation.setOfferedCard("US Bank Platinum for Cash or US Bank Altitude Go for travel Miles");
+        System.out.println("Rule 26");
+     end;
+
+
+rule "27"
+salience 5
+    when
+        recommendation : Profile(creditScore>650 && creditAge< 700 && creditAge > 6)
+    then
+        recommendation.setOfferedCard("Petal Credit Card");
+        System.out.println("Rule 27");
+     end;
+
+rule "28"
+salience 1
+    when
+        recommendation : Profile(creditScore>650 && creditAge< 700 && creditAge > 6 && reason == "Balance Transfer")
+    then
+        recommendation.setOfferedCard("Discover It Balance Transfer Card");
+        System.out.println("Rule 28");
+     end;
+
+
+rule "29"
+salience 1
+    when
+        recommendation : Profile(creditScore>750 && openedAccountLastTwoYears <5)
+    then
+        recommendation.setOfferedCard("Chase Sapphire Prefered Card");
+        System.out.println("Rule 29");
+     end;
+
+rule "30"
+salience 1
+    when
+        recommendation : Profile(creditScore>750 && openedAccountLastTwoYears >5)
+    then
+        recommendation.setOfferedCard("The Business Platinum Card by Amex");
+        System.out.println("Rule 30");
+     end;
+
+rule "31"
+salience 10
+    when
+        recommendation : Profile(numberOfCardsOpen == 0)
+    then
+        recommendation.setOfferedCard("Deserve Edu");
+        System.out.println("Rule 31");
+    end;
+
+rule "32"
+salience 10
+    when
+        recommendation : Profile(creditAge == 0)
+    then
+        recommendation.setOfferedCard("Deserve Edu");
+        System.out.println("Rule 32");
+    end;
+
+rule "33"
+salience 10
+    when
+        recommendation : Profile(numberOfCardsOpen == 1 )
+    then
+        recommendation.setOfferedCard("Discover It");
+        System.out.println("Rule 33");
+     end;
+
+rule "34"
+salience 10
+    when
+        recommendation : Profile(openedAccountLastTwoYears < 5 && creditAge>6 )
+    then
+        recommendation.setOfferedCard("Chase");
+        System.out.println("Rule 34");
+     end;
+
+rule "35"
+salience 10
+    when
+        recommendation : Profile(creditAge > 6 && openedAccountLastTwoYears > 5)
+    then
+        recommendation.setOfferedCard("Amex");
+        System.out.println("Rule 35");
+     end;
+
+rule "36"
+salience 10
+    when
+        recommendation : Profile(creditAge > 12 )
+    then
+        recommendation.setOfferedCard("Chase");
+        System.out.println("Rule 36");
+     end;
+
+rule "37"
+salience 10
+    when
+        recommendation : Profile(creditScore > 650 )
+    then
+        recommendation.setOfferedCard("Amex");
+        System.out.println("Rule 37");
+     end;
+
+rule "38"
+salience 10
+    when
+        recommendation : Profile(creditScore > 700)
+    then
+        recommendation.setOfferedCard("Chase");
+        System.out.println("Rule 38");
+     end;
